@@ -1,22 +1,20 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
 }
 
 android {
-    namespace 'xyz.savvamirzoyan.nous'
+    namespace 'xyz.savvamirzoyan.nous.shared_app'
     compileSdk rootProject.compileSdkVersion
 
     defaultConfig {
-        applicationId "xyz.savvamirzoyan.nous"
         minSdk rootProject.minSdkVersion
         targetSdk rootProject.targetSdkVersion
-        versionCode rootProject.versionCode
-        versionName rootProject.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -42,9 +40,9 @@ android {
 
 dependencies {
 
-    implementation project(":shared-app")
+    implementation project(":core")
 
-    implementation ANDROIDX_CORE_KTX, APPCOMPAT, MATERIAL_DESIGN, HILT, NAVIGATION_FRAGMENT, NAVIGATION_UI, CONSTRAINT_LAYOUT
+    implementation MATERIAL_DESIGN, LIFECYCLE_RUNTIME, APPCOMPAT, HILT, ANDROIDX_CORE_KTX, GLIDE, LIFECYCLE_VIEWMODEL, NAVIGATION_FRAGMENT
     kapt HILT_COMPILER
     testImplementation JUNIT
     androidTestImplementation TEST_EXT_JUNIT
