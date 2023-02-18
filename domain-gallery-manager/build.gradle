@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace 'xyz.savvamirzoyan.nous.feature_gallery'
+    namespace 'xyz.savvamirzoyan.nous.domain_gallery_manager'
     compileSdk rootProject.compileSdkVersion
 
     defaultConfig {
@@ -23,29 +23,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-
-    buildFeatures {
-        viewBinding true
     }
 }
 
 dependencies {
 
     implementation project(":core")
-    implementation project(":shared-app")
-    implementation project(":domain-gallery-manager")
 
-    implementation GLIDE, LIFECYCLE_VIEWMODEL, LIFECYCLE_RUNTIME, FRAGMENTS, ANDROIDX_CORE_KTX, APPCOMPAT, MATERIAL_DESIGN, HILT, NAVIGATION_FRAGMENT, NAVIGATION_UI
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation ANDROIDX_CORE_KTX, HILT
     kapt HILT_COMPILER
     testImplementation JUNIT
     androidTestImplementation TEST_EXT_JUNIT

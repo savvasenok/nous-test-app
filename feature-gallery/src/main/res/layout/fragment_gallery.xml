@@ -9,8 +9,8 @@
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingTop="128dp">
+        app:layout_behavior="@string/searchbar_scrolling_view_behavior"
+        tools:ignore="PrivateResource">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_images"
@@ -18,9 +18,7 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_behavior="@string/searchbar_scrolling_view_behavior"
             app:spanCount="@integer/gallery_columns"
-            tools:ignore="PrivateResource"
             tools:itemCount="8"
             tools:listitem="@layout/layout_image" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -39,6 +37,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.search.SearchView
+        android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:hint="@string/search_hint"

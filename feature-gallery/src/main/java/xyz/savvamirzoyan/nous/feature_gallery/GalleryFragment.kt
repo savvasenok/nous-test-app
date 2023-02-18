@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.savvamirzoyan.nous.feature_gallery.databinding.FragmentGalleryBinding
@@ -49,6 +50,8 @@ class GalleryFragment : CoreFragment<FragmentGalleryBinding>() {
         binding.rvSearchResultImages.adapter = adapterSearchResultImages
 
         binding.swipeRefreshLayout.setOnRefreshListener { viewModel.onRefresh() }
+
+        binding.searchView.editText.addTextChangedListener { viewModel.onSearch(it?.toString() ?: "") }
     }
 
     private fun setupFlowListeners() {
@@ -57,8 +60,8 @@ class GalleryFragment : CoreFragment<FragmentGalleryBinding>() {
             binding.swipeRefreshLayout.isRefreshing = false
         }
 
-        collect(viewModel.galleryImagesFlow) {
-            adapterGalleryImages.update(it)
+        collect(viewModel.searchResultImagesFlow) {
+            adapterSearchResultImages.update(it)
         }
     }
 }

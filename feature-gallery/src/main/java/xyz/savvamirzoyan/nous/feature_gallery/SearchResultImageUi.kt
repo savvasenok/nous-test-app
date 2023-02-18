@@ -4,9 +4,12 @@ import xyz.savvamirzoyan.nous.core.Model
 import xyz.savvamirzoyan.nous.core.PictureUrl
 import xyz.savvamirzoyan.nous.shared_app.ui_state.TextState
 
-class SearchResultImageUi(
+data class SearchResultImageUi(
     val pictureUrl: PictureUrl,
     val title: TextState,
     val description: TextState,
-    // TODO: spannable for selection
+    val titleSearchResultIndexStart: Int,
+    val titleSearchResultIndexEnd: Int,
+    val descriptionSearchResultIndexStart: Int,
+    val descriptionSearchResultIndexEnd: Int,
 ) : Model.Ui
