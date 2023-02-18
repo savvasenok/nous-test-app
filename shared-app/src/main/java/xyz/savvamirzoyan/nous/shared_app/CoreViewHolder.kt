@@ -8,4 +8,5 @@ abstract class CoreViewHolder<out V : ViewBinding, I : Model.Ui>(
     protected val binding: V
 ) : RecyclerView.ViewHolder(binding.root) {
     abstract fun bind(item: I)
+    open fun <R : Model.Ui> bindPayload(item: I, payload: List<R>) {}
 }
