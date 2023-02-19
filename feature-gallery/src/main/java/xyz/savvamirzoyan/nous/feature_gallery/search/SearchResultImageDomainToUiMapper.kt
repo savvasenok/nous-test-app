@@ -1,4 +1,4 @@
-package xyz.savvamirzoyan.nous.feature_gallery
+package xyz.savvamirzoyan.nous.feature_gallery.search
 
 import xyz.savvamirzoyan.nous.domain_gallery_manager.SearchResultImageDomain
 import xyz.savvamirzoyan.nous.shared_app.ui_state.TextState

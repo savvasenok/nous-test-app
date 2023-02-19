@@ -1,4 +1,4 @@
-package xyz.savvamirzoyan.nous.feature_gallery
+package xyz.savvamirzoyan.nous.feature_gallery.gallery
 
 import xyz.savvamirzoyan.nous.core.Model
 import xyz.savvamirzoyan.nous.core.PictureUrl

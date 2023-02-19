@@ -41,6 +41,8 @@ buildscript {
         FRAGMENTS = "androidx.fragment:fragment-ktx:$fragmentsVersion"
         ANDROIDX_CORE_KTX = "androidx.core:core-ktx:$androidxCoreKtxVersion"
         ROOM = "androidx.room:room-runtime:$roomVersion"
+        ROOM_KTX = "androidx.room:room-ktx:$roomVersion"
+        ROOM_COMPILER = "androidx.room:room-compiler:$roomVersion"
         OKHTTP = "com.squareup.okhttp3:okhttp:$okHttpVersion"
         OKHTTP_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
         RETROFIT = "com.squareup.retrofit2:retrofit:$retrofitVersion"

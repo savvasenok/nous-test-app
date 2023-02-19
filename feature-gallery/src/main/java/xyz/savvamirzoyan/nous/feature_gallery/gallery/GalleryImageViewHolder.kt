@@ -1,4 +1,4 @@
-package xyz.savvamirzoyan.nous.feature_gallery
+package xyz.savvamirzoyan.nous.feature_gallery.gallery
 
 import xyz.savvamirzoyan.nous.feature_gallery.databinding.LayoutImageBinding
 import xyz.savvamirzoyan.nous.shared_app.CoreViewHolder

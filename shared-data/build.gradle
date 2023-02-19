@@ -1,22 +1,25 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
 }
 
 android {
-    namespace 'xyz.savvamirzoyan.nous'
+    namespace 'xyz.savvamirzoyan.nous.shared_data'
     compileSdk rootProject.compileSdkVersion
 
+    def NOUS_API_URL = "NOUS_API_URL"
+
     defaultConfig {
-        applicationId "xyz.savvamirzoyan.nous"
         minSdk rootProject.minSdkVersion
         targetSdk rootProject.targetSdkVersion
-        versionCode rootProject.versionCode
-        versionName rootProject.versionName
+
+        buildConfigField("String", NOUS_API_URL, "\"https://cloud.nousdigital.net/s/Njedq4WpjWz4KKk/\"")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -25,30 +28,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-
-    buildFeatures {
-        viewBinding true
     }
 }
 
 dependencies {
 
-    implementation project(":shared-app")
-    implementation project(":feature-gallery")
-    implementation project(":shared-data")
-    implementation project(":data-gallery")
+    implementation project(":core")
+    implementation project(":domain-gallery-manager")
 
-    implementation ANDROIDX_CORE_KTX, APPCOMPAT, MATERIAL_DESIGN, HILT, NAVIGATION_FRAGMENT, NAVIGATION_UI, CONSTRAINT_LAYOUT
+    implementation HILT, ROOM, ROOM_KTX, RETROFIT, OKHTTP, OKHTTP_INTERCEPTOR, KOTLINX_SERIALIZATION_JSON, KOTLINX_SERIALIZATION_CONVERTER
     kapt HILT_COMPILER
+    kapt ROOM_COMPILER
     testImplementation JUNIT
     androidTestImplementation TEST_EXT_JUNIT
     androidTestImplementation ESPRESSO

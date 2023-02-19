@@ -1,57 +1,70 @@
 package xyz.savvamirzoyan.nous.domain_gallery_manager
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
+import xyz.savvamirzoyan.nous.core.ResultWrap
 import javax.inject.Inject
 
 interface GalleryManagerInteractor {
 
-    val imagesFlow: Flow<List<GalleryImageDomain>>
-    val searchResultImagesFlow: Flow<List<SearchResultImageDomain>>
+    val imagesFlow: Flow<ResultWrap<List<GalleryImageDomain>>>
+    val searchResultImagesFlow: Flow<ResultWrap<List<SearchResultImageDomain>>>
 
     suspend fun requestImages()
     suspend fun search(searchRequest: String)
 
-    class Base @Inject constructor() : GalleryManagerInteractor {
+    class Base @Inject constructor(
+        private val galleryRepository: GalleryRepository
+    ) : GalleryManagerInteractor {
 
         private val _currentSearchRequestFlow = MutableStateFlow("")
 
-        override val imagesFlow: Flow<List<GalleryImageDomain>> = flow {}
+        private val _imagesFlow =
+            MutableStateFlow<ResultWrap<List<GalleryImageDomain>>>(ResultWrap.Success(emptyList()))
+        override val imagesFlow: Flow<ResultWrap<List<GalleryImageDomain>>> = _imagesFlow
 
-        override val searchResultImagesFlow: Flow<List<SearchResultImageDomain>> = combine(
+        override val searchResultImagesFlow: Flow<ResultWrap<List<SearchResultImageDomain>>> = combine(
             _currentSearchRequestFlow, imagesFlow
-        ) { searchRequest: String, images: List<GalleryImageDomain> ->
+        ) { searchRequest: String, images: ResultWrap<List<GalleryImageDomain>> ->
 
-            if (searchRequest.isNotBlank()) {
-                images
+            if (searchRequest.isBlank()) ResultWrap.Success<List<SearchResultImageDomain>>(listOf())
+            else when (images) {
+                is ResultWrap.Failure -> ResultWrap.Failure(images.error)
+                is ResultWrap.Success -> images.data
                     .filter { image ->
-                        image.title.lowercase().contains(searchRequest.lowercase())
-                                || image.description.lowercase().contains(searchRequest.lowercase())
+                        image.title?.lowercase()?.contains(searchRequest.lowercase()) == true
+                                || image.description?.lowercase()?.contains(searchRequest.lowercase()) == true
                     }
                     .map { image ->
-                        val titleSearchResultStartIndex = image.title.indexOf(searchRequest, ignoreCase = true)
-                        val titleSearchResultRange: IntRange? = if (titleSearchResultStartIndex == -1) null
-                        else titleSearchResultStartIndex..titleSearchResultStartIndex + searchRequest.length
+                        val titleSearchResultStartIndex =
+                            image.title?.indexOf(searchRequest, ignoreCase = true) ?: -1
+                        val titleSearchResultRange: IntRange? =
+                            if (titleSearchResultStartIndex == -1) null
+                            else titleSearchResultStartIndex..titleSearchResultStartIndex + searchRequest.length
 
                         val descriptionSearchResultStartIndex =
-                            image.description.indexOf(searchRequest, ignoreCase = true)
+                            image.description?.indexOf(searchRequest, ignoreCase = true) ?: -1
                         val descriptionSearchResultRange: IntRange? =
                             if (descriptionSearchResultStartIndex == -1) null
                             else descriptionSearchResultStartIndex..descriptionSearchResultStartIndex + searchRequest.length
 
                         SearchResultImageDomain(
                             id = image.id,
-                            pictureUrl = image.pictureUrl,
-                            title = image.title,
-                            description = image.description,
+                            pictureUrl = image.pictureUrl ?: "", // no particular handle of nullable values
+                            title = image.title ?: "",
+                            description = image.description ?: "",
                             titleSearchResultRange = titleSearchResultRange,
                             descriptionSearchResultRange = descriptionSearchResultRange
                         )
                     }
-            } else emptyList()
+                    .let { ResultWrap.Success(it) }
+            }
         }.flowOn(Dispatchers.Default)
 
-        override suspend fun requestImages() = Unit // TODO: send request to data layer
+        override suspend fun requestImages() = galleryRepository.fetchImages().collect { _imagesFlow.emit(it) }
         override suspend fun search(searchRequest: String) = _currentSearchRequestFlow.emit(searchRequest)
     }
 }

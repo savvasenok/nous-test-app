@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import xyz.savvamirzoyan.nous.feature_gallery.gallery.GalleryImageDomainToUiMapper
+import xyz.savvamirzoyan.nous.feature_gallery.search.SearchResultImageDomainToUiMapper
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)

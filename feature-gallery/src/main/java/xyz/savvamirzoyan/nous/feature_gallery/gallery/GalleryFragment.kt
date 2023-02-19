@@ -1,4 +1,4 @@
-package xyz.savvamirzoyan.nous.feature_gallery
+package xyz.savvamirzoyan.nous.feature_gallery.gallery
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,8 +7,15 @@ import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import xyz.savvamirzoyan.nous.core.Model
+import xyz.savvamirzoyan.nous.feature_gallery.GalleryViewModel
+import xyz.savvamirzoyan.nous.feature_gallery.NoDataFingerprint
+import xyz.savvamirzoyan.nous.feature_gallery.R
 import xyz.savvamirzoyan.nous.feature_gallery.databinding.FragmentGalleryBinding
+import xyz.savvamirzoyan.nous.feature_gallery.search.SearchResultImageFingerprint
+import xyz.savvamirzoyan.nous.feature_gallery.search.SearchResultImageUi
 import xyz.savvamirzoyan.nous.shared_app.CoreFragment
 import xyz.savvamirzoyan.nous.shared_app.CoreRecyclerViewAdapter
 
@@ -17,10 +24,15 @@ class GalleryFragment : CoreFragment<FragmentGalleryBinding>() {
 
     private val viewModel: GalleryViewModel by viewModels()
 
+    private val noDataFingerprint by lazy { NoDataFingerprint(viewModel::onTryAgain) }
+
     // lazy-init required, bc fragment is detached in this moment and its impossible to get VM
     private val adapterGalleryImages by lazy {
-        CoreRecyclerViewAdapter<GalleryImageUi>(
-            fingerprints = listOf(GalleryImageFingerprint(viewModel::onGalleryImageClick))
+        CoreRecyclerViewAdapter<Model.Ui>(
+            fingerprints = listOf(
+                GalleryImageFingerprint(viewModel::onGalleryImageClick),
+                noDataFingerprint
+            )
         )
     }
 
@@ -46,7 +58,10 @@ class GalleryFragment : CoreFragment<FragmentGalleryBinding>() {
             binding.rvImages.setPadding(0, it.height, 0, it.height)
             binding.rvImages.scrollTo(0, 0)
         }
+
         binding.rvImages.adapter = adapterGalleryImages
+        binding.rvImages.layoutManager = getGridLayoutManager()
+
         binding.rvSearchResultImages.adapter = adapterSearchResultImages
 
         binding.swipeRefreshLayout.setOnRefreshListener { viewModel.onRefresh() }
@@ -62,6 +77,21 @@ class GalleryFragment : CoreFragment<FragmentGalleryBinding>() {
 
         collect(viewModel.searchResultImagesFlow) {
             adapterSearchResultImages.update(it)
+        }
+    }
+
+    private fun getGridLayoutManager(): GridLayoutManager {
+
+        val maxSpanSize = requireContext().resources.getInteger(R.integer.gallery_columns)
+
+        return GridLayoutManager(context, maxSpanSize).apply {
+            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    val viewType = adapterGalleryImages.getItemViewType(position)
+                    if (viewType == noDataFingerprint.getLayoutRes()) return maxSpanSize
+                    return 1
+                }
+            }
         }
     }
 }

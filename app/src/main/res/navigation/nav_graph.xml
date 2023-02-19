@@ -7,6 +7,6 @@
 
     <fragment
         android:id="@+id/fragmentGallery"
-        android:name="xyz.savvamirzoyan.nous.feature_gallery.GalleryFragment"
+        android:name="xyz.savvamirzoyan.nous.feature_gallery.gallery.GalleryFragment"
         tools:layout="@layout/fragment_gallery" />
 </navigation>

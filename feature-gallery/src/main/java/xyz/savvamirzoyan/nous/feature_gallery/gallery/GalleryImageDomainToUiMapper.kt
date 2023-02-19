@@ -1,4 +1,4 @@
-package xyz.savvamirzoyan.nous.feature_gallery
+package xyz.savvamirzoyan.nous.feature_gallery.gallery
 
 import xyz.savvamirzoyan.nous.domain_gallery_manager.GalleryImageDomain
 import javax.inject.Inject
@@ -13,7 +13,7 @@ interface GalleryImageDomainToUiMapper {
     class Base @Inject constructor() : GalleryImageDomainToUiMapper {
 
         override fun map(model: GalleryImageDomain) = GalleryImageUi(
-            pictureUrl = model.pictureUrl
+            pictureUrl = model.pictureUrl ?: ""
         )
     }
 }

@@ -1,22 +1,20 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
 }
-
 android {
-    namespace 'xyz.savvamirzoyan.nous'
+    namespace 'xyz.savvamirzoyan.nous.data_gallery'
     compileSdk rootProject.compileSdkVersion
 
     defaultConfig {
-        applicationId "xyz.savvamirzoyan.nous"
         minSdk rootProject.minSdkVersion
         targetSdk rootProject.targetSdkVersion
-        versionCode rootProject.versionCode
-        versionName rootProject.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -25,30 +23,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-
-    buildFeatures {
-        viewBinding true
     }
 }
 
 dependencies {
 
-    implementation project(":shared-app")
-    implementation project(":feature-gallery")
+    implementation project(":core")
+    implementation project(":domain-gallery-manager")
     implementation project(":shared-data")
-    implementation project(":data-gallery")
 
-    implementation ANDROIDX_CORE_KTX, APPCOMPAT, MATERIAL_DESIGN, HILT, NAVIGATION_FRAGMENT, NAVIGATION_UI, CONSTRAINT_LAYOUT
+    implementation HILT, ROOM, RETROFIT, ROOM_KTX, KOTLINX_SERIALIZATION_CONVERTER, KOTLINX_SERIALIZATION_JSON
     kapt HILT_COMPILER
+    kapt ROOM_COMPILER
     testImplementation JUNIT
     androidTestImplementation TEST_EXT_JUNIT
     androidTestImplementation ESPRESSO

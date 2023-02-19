@@ -1,8 +1,9 @@
-package xyz.savvamirzoyan.nous.feature_gallery
+package xyz.savvamirzoyan.nous.feature_gallery.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import xyz.savvamirzoyan.nous.core.Model
+import xyz.savvamirzoyan.nous.feature_gallery.R
 import xyz.savvamirzoyan.nous.feature_gallery.databinding.LayoutSearchResultImageBinding
 import xyz.savvamirzoyan.nous.shared_app.CoreViewHolder
 import xyz.savvamirzoyan.nous.shared_app.CoreViewHolderFingerprint
