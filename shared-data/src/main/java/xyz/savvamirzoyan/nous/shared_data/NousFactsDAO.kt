@@ -12,7 +12,7 @@ interface NousFactsDAO {
     @Query("SELECT * FROM nous_facts")
     suspend fun selectAll(): List<NousFactLocal>
 
-    @Query("SELECT * FROM nous_facts WHERE factId = :nousFactId")
+    @Query("SELECT * FROM nous_facts WHERE fact_id = :nousFactId")
     suspend fun select(nousFactId: ID): NousFactLocal?
 
     @Delete

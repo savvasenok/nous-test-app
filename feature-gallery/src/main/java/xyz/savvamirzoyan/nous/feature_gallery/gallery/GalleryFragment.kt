@@ -4,18 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.doOnPreDraw
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import xyz.savvamirzoyan.nous.core.Model
+import xyz.savvamirzoyan.nous.feature_gallery.GalleryImagesDiffUtils
 import xyz.savvamirzoyan.nous.feature_gallery.GalleryViewModel
 import xyz.savvamirzoyan.nous.feature_gallery.NoDataFingerprint
 import xyz.savvamirzoyan.nous.feature_gallery.R
 import xyz.savvamirzoyan.nous.feature_gallery.databinding.FragmentGalleryBinding
 import xyz.savvamirzoyan.nous.feature_gallery.search.SearchResultImageFingerprint
-import xyz.savvamirzoyan.nous.feature_gallery.search.SearchResultImageUi
+import xyz.savvamirzoyan.nous.feature_gallery.search.SearchResultImagesDiffUtils
 import xyz.savvamirzoyan.nous.shared_app.CoreFragment
 import xyz.savvamirzoyan.nous.shared_app.CoreRecyclerViewAdapter
 
@@ -28,17 +29,19 @@ class GalleryFragment : CoreFragment<FragmentGalleryBinding>() {
 
     // lazy-init required, bc fragment is detached in this moment and its impossible to get VM
     private val adapterGalleryImages by lazy {
-        CoreRecyclerViewAdapter<Model.Ui>(
+        CoreRecyclerViewAdapter(
             fingerprints = listOf(
                 GalleryImageFingerprint(viewModel::onGalleryImageClick),
                 noDataFingerprint
-            )
+            ),
+            GalleryImagesDiffUtils()
         )
     }
 
     private val adapterSearchResultImages by lazy {
-        CoreRecyclerViewAdapter<SearchResultImageUi>(
-            fingerprints = listOf(SearchResultImageFingerprint(viewModel::onSearchResultImageClick))
+        CoreRecyclerViewAdapter(
+            fingerprints = listOf(SearchResultImageFingerprint(viewModel::onSearchResultImageClick)),
+            SearchResultImagesDiffUtils()
         )
     }
 
@@ -55,8 +58,11 @@ class GalleryFragment : CoreFragment<FragmentGalleryBinding>() {
 
     private fun setupViews() {
         binding.appbar.doOnPreDraw {
-            binding.rvImages.setPadding(0, it.height, 0, it.height)
-            binding.rvImages.scrollTo(0, 0)
+            val lp = (binding.swipeRefreshLayout.layoutParams as CoordinatorLayout.LayoutParams)
+            lp.topMargin = it.height
+
+            binding.swipeRefreshLayout.layoutParams = lp
+            binding.rvImages.setPadding(0, 0, 0, it.height)
         }
 
         binding.rvImages.adapter = adapterGalleryImages

@@ -30,7 +30,7 @@ interface GalleryManagerInteractor {
             _currentSearchRequestFlow, imagesFlow
         ) { searchRequest: String, images: ResultWrap<List<GalleryImageDomain>> ->
 
-            if (searchRequest.isBlank()) ResultWrap.Success<List<SearchResultImageDomain>>(listOf())
+            if (searchRequest.isBlank()) ResultWrap.Success(listOf())
             else when (images) {
                 is ResultWrap.Failure -> ResultWrap.Failure(images.error)
                 is ResultWrap.Success -> images.data
@@ -64,7 +64,7 @@ interface GalleryManagerInteractor {
             }
         }.flowOn(Dispatchers.Default)
 
-        override suspend fun requestImages() = galleryRepository.fetchImages().collect { _imagesFlow.emit(it) }
+        override suspend fun requestImages() = galleryRepository.fetchImages().let { _imagesFlow.emit(it) }
         override suspend fun search(searchRequest: String) = _currentSearchRequestFlow.emit(searchRequest)
     }
 }

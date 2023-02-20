@@ -11,6 +11,7 @@ interface SearchResultImageDomainToUiMapper {
     class Base @Inject constructor() : SearchResultImageDomainToUiMapper {
 
         override fun map(model: SearchResultImageDomain) = SearchResultImageUi(
+            id = model.id,
             pictureUrl = model.pictureUrl,
             title = TextState(model.title),
             description = TextState(model.description),

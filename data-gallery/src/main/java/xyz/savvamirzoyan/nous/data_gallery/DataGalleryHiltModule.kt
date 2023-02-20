@@ -18,6 +18,9 @@ abstract class DataGalleryHiltModule {
     @Binds
     abstract fun bindGalleryRepository(impl: GalleryRepositoryImpl): GalleryRepository
 
+    @Binds
+    abstract fun bindNousFactCloudToLocalMapper(base: NousFactCloudToLocalMapper.Base): NousFactCloudToLocalMapper
+
     companion object {
 
         @Provides

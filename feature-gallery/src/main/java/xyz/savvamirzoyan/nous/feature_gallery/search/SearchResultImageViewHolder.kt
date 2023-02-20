@@ -4,6 +4,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.BackgroundColorSpan
 import com.google.android.material.color.MaterialColors
+import xyz.savvamirzoyan.nous.core.Model
 import xyz.savvamirzoyan.nous.feature_gallery.databinding.LayoutSearchResultImageBinding
 import xyz.savvamirzoyan.nous.shared_app.CoreViewHolder
 import xyz.savvamirzoyan.nous.shared_app.load
@@ -23,25 +24,40 @@ class SearchResultImageViewHolder(
     override fun bind(item: SearchResultImageUi) {
         binding.ivPicture.load(item.pictureUrl)
 
-        SpannableString(item.title.getString(binding.root.context))
-            .also {
-                it.setSpan(
-                    BackgroundColorSpan(color),
-                    item.titleSearchResultIndexStart,
-                    item.titleSearchResultIndexEnd,
-                    Spanned.SPAN_INCLUSIVE_INCLUSIVE
-                )
-            }
-            .also { binding.tvTitle.text = it }
+        // TODO: shift contents of textview, so highlighted text is somewhere in the center
 
-        SpannableString(item.description.getString(binding.root.context))
-            .also {
-                it.setSpan(
-                    BackgroundColorSpan(color),
+        buildSpannableString(
+            item.title.getString(binding.root.context),
+            item.titleSearchResultIndexStart,
+            item.titleSearchResultIndexEnd
+        ).also { binding.tvTitle.text = it }
+
+        buildSpannableString(
+            item.description.getString(binding.root.context),
+            item.descriptionSearchResultIndexStart,
+            item.descriptionSearchResultIndexEnd
+        ).also { binding.tvDescription.text = it }
+    }
+
+    override fun <R : Model.Ui> bindPayload(item: SearchResultImageUi, payload: List<R>) {
+        payload.forEach { p ->
+            if (p is SearchResultImagePayload) {
+                buildSpannableString(
+                    item.title.getString(binding.root.context),
+                    item.titleSearchResultIndexStart,
+                    item.titleSearchResultIndexEnd
+                ).also { binding.tvTitle.text = it }
+
+                buildSpannableString(
+                    item.description.getString(binding.root.context),
                     item.descriptionSearchResultIndexStart,
-                    item.descriptionSearchResultIndexEnd,
-                    Spanned.SPAN_INCLUSIVE_INCLUSIVE
-                )
-            }.also { binding.tvDescription.text = it }
+                    item.descriptionSearchResultIndexEnd
+                ).also { binding.tvDescription.text = it }
+            }
+        }
+    }
+
+    private fun buildSpannableString(string: String, start: Int, end: Int) = SpannableString(string).apply {
+        setSpan(BackgroundColorSpan(color), start, end, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
     }
 }

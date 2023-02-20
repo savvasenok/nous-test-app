@@ -10,7 +10,7 @@ import xyz.savvamirzoyan.nous.core.PictureUrl
 @Serializable
 data class NousFactCloud(
     val id: ID,
-    @SerialName("imageUrl") val pictureUrl: PictureUrl? = null,
-    val title: String? = null,
-    val description: String? = null
+    @SerialName("imageUrl") val pictureUrl: PictureUrl,
+    val title: String,
+    val description: String
 ) : Model.Data.Cloud

@@ -4,4 +4,6 @@
     <string name="no_data_title">No data to show</string>
     <string name="not_data_description">Even local storage is empty 😢</string>
     <string name="button_try_again">Try again</string>
+    <string name="error_no_connection">No connection to fetch data. Want to try again?</string>
+    <string name="error_unknown">Unknown error</string>
 </resources>

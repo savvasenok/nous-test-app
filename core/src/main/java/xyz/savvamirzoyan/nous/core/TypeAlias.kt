@@ -1,4 +1,4 @@
 package xyz.savvamirzoyan.nous.core
 
-typealias ID = Int
+typealias ID = Long
 typealias PictureUrl = String

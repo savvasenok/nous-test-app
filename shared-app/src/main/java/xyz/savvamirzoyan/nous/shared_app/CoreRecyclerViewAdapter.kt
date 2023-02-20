@@ -2,13 +2,14 @@ package xyz.savvamirzoyan.nous.shared_app
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import xyz.savvamirzoyan.nous.core.Model
 
 class CoreRecyclerViewAdapter<T : Model.Ui>(
     private val fingerprints: List<CoreViewHolderFingerprint<*, *>>,
-//    private val diffUtilCallbackGetter: CoreDiffUtilsGetter<T>
+    private val diffUtilCallbackGetter: CoreDiffUtilsGetter<T>
 ) : RecyclerView.Adapter<CoreViewHolder<ViewBinding, Model.Ui>>() {
 
     private var items = listOf<T>()
@@ -50,11 +51,9 @@ class CoreRecyclerViewAdapter<T : Model.Ui>(
     }
 
     fun update(newItems: List<T>) {
-//        val diffCallback = diffUtilCallbackGetter.get(old = items, new = newItems)
-//        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        val diffCallback = diffUtilCallbackGetter.get(old = items, new = newItems)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         items = newItems
-        notifyDataSetChanged()
-        // TODO implement diffutils
-//        diffResult.dispatchUpdatesTo(this)
+        diffResult.dispatchUpdatesTo(this)
     }
 }
