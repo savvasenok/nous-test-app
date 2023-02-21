@@ -8,10 +8,6 @@
     <fragment
         android:id="@+id/fragmentDetails"
         android:name="xyz.savvamirzoyan.nous.feature_details.DetailsFragment"
-        app:enterAnim="@anim/nav_default_enter_anim"
-        app:exitAnim="@anim/nav_default_exit_anim"
-        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-        app:popExitAnim="@anim/nav_default_pop_exit_anim"
         tools:layout="@layout/fragment_details" />
 
     <deepLink app:uri="nous-app://news-item?news-item-id={KEY_NEWS_ITEM_ID}" />

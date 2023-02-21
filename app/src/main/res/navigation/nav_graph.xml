@@ -8,10 +8,6 @@
     <fragment
         android:id="@+id/fragmentGallery"
         android:name="xyz.savvamirzoyan.nous.feature_gallery.gallery.GalleryFragment"
-        app:enterAnim="@anim/nav_default_enter_anim"
-        app:exitAnim="@anim/nav_default_exit_anim"
-        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-        app:popExitAnim="@anim/nav_default_pop_exit_anim"
         tools:layout="@layout/fragment_gallery" />
 
     <include app:graph="@navigation/navigation_details" />

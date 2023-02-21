@@ -1,6 +1,5 @@
 package xyz.savvamirzoyan.nous.feature_gallery
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -77,13 +76,17 @@ class GalleryViewModel @Inject constructor(
 
     fun onGalleryImageClick(clickedIndex: Int) {
         viewModelScope.launch {
-            val newsItemId = interactor.getNewsAtIndex(clickedIndex)
+            val newsItemId = interactor.getNewsIdAtIndex(clickedIndex)
             val deeplink = deepLinkBuilder.newsItemDetailsDeepLink(newsItemId)
             navigate(deeplink)
         }
     }
 
     fun onSearchResultImageClick(clickedIndex: Int) {
-        Log.d("SPAMEGGS", "onSearchResultImageClick(clickedIndex:$clickedIndex)")
+        viewModelScope.launch {
+            val newsItemId = interactor.getSearchResultNewsIdAtIndex(clickedIndex)
+            val deeplink = deepLinkBuilder.newsItemDetailsDeepLink(newsItemId)
+            navigate(deeplink)
+        }
     }
 }

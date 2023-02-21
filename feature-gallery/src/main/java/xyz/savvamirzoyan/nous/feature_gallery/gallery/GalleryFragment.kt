@@ -53,6 +53,7 @@ class GalleryFragment : CoreFragment<FragmentGalleryBinding>() {
         super.onViewCreated(view, savedInstanceState)
         setupViews()
         setupFlowListeners()
+        setupFragmentWithTopInsects()
     }
 
     private fun setupViews() {

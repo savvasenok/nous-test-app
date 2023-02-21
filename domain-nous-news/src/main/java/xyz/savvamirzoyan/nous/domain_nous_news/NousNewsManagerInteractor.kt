@@ -14,7 +14,8 @@ interface NousNewsManagerInteractor {
 
     suspend fun requestNews()
     suspend fun search(searchRequest: String)
-    suspend fun getNewsAtIndex(index: Int): Long
+    suspend fun getNewsIdAtIndex(index: Int): Long
+    suspend fun getSearchResultNewsIdAtIndex(index: Int): Long
 
     class Base @Inject constructor(
         private val galleryRepository: NousNewsRepository
@@ -35,8 +36,8 @@ interface NousNewsManagerInteractor {
                 is ResultWrap.Failure -> ResultWrap.Failure(images.error)
                 is ResultWrap.Success -> images.data
                     .filter { image ->
-                        image.title?.lowercase()?.contains(searchRequest.lowercase()) == true
-                                || image.description?.lowercase()?.contains(searchRequest.lowercase()) == true
+                        image.title.lowercase().contains(searchRequest.lowercase())
+                                || image.description.lowercase().contains(searchRequest.lowercase())
                     }
                     .map { image ->
                         val titleSearchResultStartIndex =
@@ -53,9 +54,9 @@ interface NousNewsManagerInteractor {
 
                         SearchResultNewsItemDomain(
                             id = image.id,
-                            pictureUrl = image.pictureUrl ?: "", // no particular handle of nullable values
-                            title = image.title ?: "",
-                            description = image.description ?: "",
+                            pictureUrl = image.pictureUrl,
+                            title = image.title,
+                            description = image.description,
                             titleSearchResultRange = titleSearchResultRange,
                             descriptionSearchResultRange = descriptionSearchResultRange
                         )
@@ -67,7 +68,12 @@ interface NousNewsManagerInteractor {
         override suspend fun requestNews() = galleryRepository.fetchNews().let { _imagesFlow.emit(it) }
         override suspend fun search(searchRequest: String) = _currentSearchRequestFlow.emit(searchRequest)
 
-        override suspend fun getNewsAtIndex(index: Int): Long = newsFlow.firstOrNull()
+        override suspend fun getNewsIdAtIndex(index: Int): Long = newsFlow.firstOrNull()
+            ?.get()
+            ?.get(index)
+            ?.id ?: -1
+
+        override suspend fun getSearchResultNewsIdAtIndex(index: Int): Long = searchResultNewsFlow.firstOrNull()
             ?.get()
             ?.get(index)
             ?.id ?: -1
