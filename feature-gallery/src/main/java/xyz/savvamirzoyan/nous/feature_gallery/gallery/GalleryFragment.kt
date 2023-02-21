@@ -10,7 +10,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import xyz.savvamirzoyan.nous.feature_gallery.GalleryImagesDiffUtils
 import xyz.savvamirzoyan.nous.feature_gallery.GalleryViewModel
 import xyz.savvamirzoyan.nous.feature_gallery.NoDataFingerprint
 import xyz.savvamirzoyan.nous.feature_gallery.R
@@ -76,6 +75,9 @@ class GalleryFragment : CoreFragment<FragmentGalleryBinding>() {
     }
 
     private fun setupFlowListeners() {
+
+        setupDefaultFlows(viewModel)
+
         collect(viewModel.galleryImagesFlow) {
             adapterGalleryImages.update(it)
             binding.swipeRefreshLayout.isRefreshing = false

@@ -5,6 +5,7 @@ package xyz.savvamirzoyan.nous.shared_data
 import android.content.Context
 import androidx.room.Room
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +22,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 abstract class DataModuleProvider {
+
+    @Binds
+    abstract fun bindPictureDownloader(base: PictureDownloader.Base): PictureDownloader
 
     companion object {
 

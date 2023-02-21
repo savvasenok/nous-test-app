@@ -11,19 +11,21 @@ import kotlinx.coroutines.launch
 import xyz.savvamirzoyan.nous.core.ErrorEntity
 import xyz.savvamirzoyan.nous.core.Model
 import xyz.savvamirzoyan.nous.core.ResultWrap
-import xyz.savvamirzoyan.nous.domain_gallery_manager.GalleryManagerInteractor
+import xyz.savvamirzoyan.nous.domain_nous_news.NousNewsManagerInteractor
 import xyz.savvamirzoyan.nous.feature_gallery.gallery.GalleryImageDomainToUiMapper
 import xyz.savvamirzoyan.nous.feature_gallery.search.SearchResultImageDomainToUiMapper
 import xyz.savvamirzoyan.nous.feature_gallery.search.SearchResultImageUi
 import xyz.savvamirzoyan.nous.shared_app.CoreViewModel
+import xyz.savvamirzoyan.nous.shared_app.DeepLinkBuilder
 import xyz.savvamirzoyan.nous.shared_app.ui_state.TextState
 import javax.inject.Inject
 
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
-    private val interactor: GalleryManagerInteractor,
+    private val interactor: NousNewsManagerInteractor,
     private val galleryImageDomainToUiMapper: GalleryImageDomainToUiMapper,
-    private val searchResultImageDomainToUiMapper: SearchResultImageDomainToUiMapper
+    private val searchResultImageDomainToUiMapper: SearchResultImageDomainToUiMapper,
+    private val deepLinkBuilder: DeepLinkBuilder
 ) : CoreViewModel() {
 
     init {
@@ -35,7 +37,7 @@ class GalleryViewModel @Inject constructor(
         _galleryNoDataFlow
             .map { listOf(NoDataUi(TextState(R.string.not_data_description), false)) },
 
-        interactor.imagesFlow.map { resultWrap ->
+        interactor.newsFlow.map { resultWrap ->
             when (resultWrap) {
                 is ResultWrap.Success -> resultWrap.data.map { galleryImageDomainToUiMapper.map(it) }
                 is ResultWrap.Failure -> when (resultWrap.error) {
@@ -45,7 +47,7 @@ class GalleryViewModel @Inject constructor(
                 }.let { listOf(it) }
             }
         })
-    val searchResultImagesFlow: Flow<List<SearchResultImageUi>> = interactor.searchResultImagesFlow.map { resultWrap ->
+    val searchResultImagesFlow: Flow<List<SearchResultImageUi>> = interactor.searchResultNewsFlow.map { resultWrap ->
         when (resultWrap) {
             is ResultWrap.Success -> resultWrap.data.map { searchResultImageDomainToUiMapper.map(it) }
             is ResultWrap.Failure -> emptyList()
@@ -53,7 +55,7 @@ class GalleryViewModel @Inject constructor(
     }
 
     private suspend fun requestImages() {
-        interactor.requestImages()
+        interactor.requestNews()
     }
 
     fun onRefresh() {
@@ -74,7 +76,11 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun onGalleryImageClick(clickedIndex: Int) {
-        Log.d("SPAMEGGS", "clickedIndex: $clickedIndex")
+        viewModelScope.launch {
+            val newsItemId = interactor.getNewsAtIndex(clickedIndex)
+            val deeplink = deepLinkBuilder.newsItemDetailsDeepLink(newsItemId)
+            navigate(deeplink)
+        }
     }
 
     fun onSearchResultImageClick(clickedIndex: Int) {

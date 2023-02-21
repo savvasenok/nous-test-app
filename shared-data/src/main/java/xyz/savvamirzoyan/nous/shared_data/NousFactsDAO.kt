@@ -7,14 +7,14 @@ import xyz.savvamirzoyan.nous.core.ID
 interface NousFactsDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(vararg items: NousFactLocal)
+    suspend fun insert(vararg items: NousNewsItemLocal)
 
     @Query("SELECT * FROM nous_facts")
-    suspend fun selectAll(): List<NousFactLocal>
+    suspend fun selectAll(): List<NousNewsItemLocal>
 
     @Query("SELECT * FROM nous_facts WHERE fact_id = :nousFactId")
-    suspend fun select(nousFactId: ID): NousFactLocal?
+    suspend fun select(nousFactId: ID): NousNewsItemLocal?
 
     @Delete
-    suspend fun delete(item: NousFactLocal)
+    suspend fun delete(item: NousNewsItemLocal)
 }

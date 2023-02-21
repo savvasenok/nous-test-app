@@ -35,10 +35,11 @@ android {
 dependencies {
 
     implementation project(":core")
-    implementation project(":domain-gallery-manager")
+    implementation project(':domain-nous-news')
     implementation project(":shared-data")
 
     implementation HILT, ROOM, RETROFIT, ROOM_KTX, KOTLINX_SERIALIZATION_CONVERTER, KOTLINX_SERIALIZATION_JSON
+    implementation project(path: ':shared-domain')
     kapt HILT_COMPILER
     kapt ROOM_COMPILER
     testImplementation JUNIT

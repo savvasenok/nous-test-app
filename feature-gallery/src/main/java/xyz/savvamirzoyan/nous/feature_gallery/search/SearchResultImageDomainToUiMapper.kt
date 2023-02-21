@@ -1,16 +1,16 @@
 package xyz.savvamirzoyan.nous.feature_gallery.search
 
-import xyz.savvamirzoyan.nous.domain_gallery_manager.SearchResultImageDomain
+import xyz.savvamirzoyan.nous.domain_nous_news.SearchResultNewsItemDomain
 import xyz.savvamirzoyan.nous.shared_app.ui_state.TextState
 import javax.inject.Inject
 
 interface SearchResultImageDomainToUiMapper {
 
-    fun map(model: SearchResultImageDomain): SearchResultImageUi
+    fun map(model: SearchResultNewsItemDomain): SearchResultImageUi
 
     class Base @Inject constructor() : SearchResultImageDomainToUiMapper {
 
-        override fun map(model: SearchResultImageDomain) = SearchResultImageUi(
+        override fun map(model: SearchResultNewsItemDomain) = SearchResultImageUi(
             id = model.id,
             pictureUrl = model.pictureUrl,
             title = TextState(model.title),

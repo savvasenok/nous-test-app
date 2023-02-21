@@ -40,7 +40,7 @@ android {
 dependencies {
 
     implementation project(":core")
-    implementation project(":domain-gallery-manager")
+    implementation project(':domain-nous-news')
 
     implementation HILT, ROOM, ROOM_KTX, RETROFIT, OKHTTP, OKHTTP_INTERCEPTOR, KOTLINX_SERIALIZATION_JSON, KOTLINX_SERIALIZATION_CONVERTER
     kapt HILT_COMPILER

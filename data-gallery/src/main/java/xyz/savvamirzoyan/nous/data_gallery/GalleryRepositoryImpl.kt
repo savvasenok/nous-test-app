@@ -2,39 +2,45 @@ package xyz.savvamirzoyan.nous.data_gallery
 
 import xyz.savvamirzoyan.nous.core.ErrorEntity
 import xyz.savvamirzoyan.nous.core.ResultWrap
-import xyz.savvamirzoyan.nous.domain_gallery_manager.GalleryImageDomain
-import xyz.savvamirzoyan.nous.domain_gallery_manager.GalleryRepository
 import xyz.savvamirzoyan.nous.shared_data.NousFactsDAO
+import xyz.savvamirzoyan.nous.shared_domain.NousNewsItemDomain
 import java.io.IOException
 import javax.inject.Inject
 
 class GalleryRepositoryImpl @Inject constructor(
-    private val nousFactsApi: NousFactsApi,
+    private val nousNewsApi: NousNewsApi,
     private val nousFactsDB: NousFactsDAO,
-    private val nousFactToGalleryDomainMapper: NousFactToGalleryDomainMapper,
-    private val nousFactCloudToLocalMapper: NousFactCloudToLocalMapper
-) : GalleryRepository {
+    private val nousNewsItemDataToDomainMapper: NousNewsItemDataToDomainMapper,
+    private val nousNewsItemCloudToLocalMapper: NousNewsItemCloudToLocalMapper
+) : xyz.savvamirzoyan.nous.shared_domain.NousNewsRepository {
 
-    override suspend fun fetchImages(): ResultWrap<List<GalleryImageDomain>> =
+    override suspend fun fetchNews(): ResultWrap<List<NousNewsItemDomain>> =
         try {
-            val fromApi = (nousFactsApi.getImages().items
+            val fromApi = (nousNewsApi.getNews().items
                 ?.also { list ->
-                    list.map { nousFactCloudToLocalMapper.map(it) }
+                    list.map { nousNewsItemCloudToLocalMapper.map(it) }
                         .also { nousFactsDB.insert(*it.toTypedArray()) }
                 }
-                ?.map { nousFactToGalleryDomainMapper.map(it) } ?: emptyList())
+                ?.map { nousNewsItemDataToDomainMapper.map(it) } ?: emptyList())
                 .let { if (it.isEmpty()) ResultWrap.Failure(ErrorEntity.NoData) else ResultWrap.Success(it) }
 
             fromApi
         } catch (_: IOException) {
-            val fromDB = getGalleryImagesDomainFromDB()
-            if (fromDB.data.isNotEmpty()) fromDB else ResultWrap.Failure(ErrorEntity.NoConnection)
+            val fromDB = getNewsItemDomainFromDB()
+            if (fromDB.isNotEmpty()) ResultWrap.Success(fromDB)
+            else ResultWrap.Failure(ErrorEntity.NoConnection)
         } catch (_: Exception) {
-            val fromDB = getGalleryImagesDomainFromDB()
-            if (fromDB.data.isNotEmpty()) fromDB else ResultWrap.Failure(ErrorEntity.ServerError)
+            val fromDB = getNewsItemDomainFromDB()
+            if (fromDB.isNotEmpty()) ResultWrap.Success(fromDB)
+            else ResultWrap.Failure(ErrorEntity.ServerError)
         }
 
-    private suspend fun getGalleryImagesDomainFromDB(): ResultWrap.Success<List<GalleryImageDomain>> =
+    override suspend fun getNewsItem(newsItemId: Long): ResultWrap<NousNewsItemDomain> = getNewsItemDomainFromDB()
+        .find { it.id == newsItemId }
+        ?.let { ResultWrap.Success(it) }
+        ?: ResultWrap.Failure(ErrorEntity.NoData)
+
+    private suspend fun getNewsItemDomainFromDB(): List<NousNewsItemDomain> =
         nousFactsDB.selectAll()
-            .let { list -> ResultWrap.Success(list.map { nousFactToGalleryDomainMapper.map(it) }) }
+            .let { list -> list.map { nousNewsItemDataToDomainMapper.map(it) } }
 }

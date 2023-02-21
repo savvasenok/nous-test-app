@@ -44,6 +44,7 @@ dependencies {
 
     implementation project(":shared-app")
     implementation project(":feature-gallery")
+    implementation project(":feature-details")
     implementation project(":shared-data")
     implementation project(":data-gallery")
 

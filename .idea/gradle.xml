@@ -13,10 +13,13 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/data-gallery" />
-            <option value="$PROJECT_DIR$/domain-gallery-manager" />
+            <option value="$PROJECT_DIR$/domain-news-details" />
+            <option value="$PROJECT_DIR$/domain-nous-news" />
+            <option value="$PROJECT_DIR$/feature-details" />
             <option value="$PROJECT_DIR$/feature-gallery" />
             <option value="$PROJECT_DIR$/shared-app" />
             <option value="$PROJECT_DIR$/shared-data" />
+            <option value="$PROJECT_DIR$/shared-domain" />
           </set>
         </option>
       </GradleProjectSettings>

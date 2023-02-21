@@ -1,6 +1,6 @@
 package xyz.savvamirzoyan.nous.feature_gallery.gallery
 
-import xyz.savvamirzoyan.nous.domain_gallery_manager.GalleryImageDomain
+import xyz.savvamirzoyan.nous.shared_domain.NousNewsItemDomain
 import javax.inject.Inject
 
 // This mapper is currently simple, but its useful to have single source of all possible mappings variations
@@ -8,11 +8,11 @@ import javax.inject.Inject
 // mapped the different way (overlay color, picture-size etc)
 interface GalleryImageDomainToUiMapper {
 
-    fun map(model: GalleryImageDomain): GalleryImageUi
+    fun map(model: NousNewsItemDomain): GalleryImageUi
 
     class Base @Inject constructor() : GalleryImageDomainToUiMapper {
 
-        override fun map(model: GalleryImageDomain) = GalleryImageUi(
+        override fun map(model: NousNewsItemDomain) = GalleryImageUi(
             pictureUrl = model.pictureUrl ?: ""
         )
     }

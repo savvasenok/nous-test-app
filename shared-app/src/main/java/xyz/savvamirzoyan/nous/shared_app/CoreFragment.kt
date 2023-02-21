@@ -55,5 +55,9 @@ abstract class CoreFragment<VB : ViewBinding> : Fragment() {
         collect(viewModel.navigationFromDeepLinkFlow) { data ->
             findNavController().navigate(request = data)
         }
+
+        collect(viewModel.navigationIntentFlow) {
+            startActivity(it)
+        }
     }
 }

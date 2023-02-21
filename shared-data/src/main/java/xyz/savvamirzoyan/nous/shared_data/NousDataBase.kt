@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [
-        NousFactLocal::class
+        NousNewsItemLocal::class
     ],
     exportSchema = true,
     version = 1
