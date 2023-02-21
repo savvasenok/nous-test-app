@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Nous</string>
+
+    <string name="alert_title_no_connection">No connection</string>
+    <string name="alert_message_no_connection">Cannot connect to the Internet to make this request. Please turn on Wi-Fi or mobile network and try again</string>
+
+    <string name="alert_title_unknown_error">Unknown error</string>
+    <string name="alert_message_unknown_error">Unknown error happened. Please restart the app and try again</string>
 </resources>

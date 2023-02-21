@@ -1,5 +1,6 @@
 package xyz.savvamirzoyan.nous.shared_app
 
+import android.app.AlertDialog
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -72,6 +73,14 @@ abstract class CoreFragment<VB : ViewBinding> : Fragment() {
 
         collect(viewModel.navigationIntentFlow) {
             startActivity(it)
+        }
+
+        collect(viewModel.alertDataFlow) {
+            AlertDialog.Builder(context)
+                .setTitle(it.first.getString(requireContext()))
+                .setMessage(it.second.getString(requireContext()))
+                .setPositiveButton(android.R.string.ok) { p0, _ -> p0?.dismiss() }
+                .show()
         }
     }
 

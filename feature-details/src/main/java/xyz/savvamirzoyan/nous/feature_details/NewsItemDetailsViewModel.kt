@@ -2,7 +2,6 @@ package xyz.savvamirzoyan.nous.feature_details
 
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -12,6 +11,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
+import xyz.savvamirzoyan.nous.core.ErrorEntity
 import xyz.savvamirzoyan.nous.core.ResultWrap
 import xyz.savvamirzoyan.nous.domain_news_details.NewsDetailsInteractor
 import xyz.savvamirzoyan.nous.shared_app.CoreViewModel
@@ -51,7 +51,13 @@ class NewsItemDetailsViewModel @AssistedInject constructor(
         viewModelScope.launch {
             newsItem?.also { item ->
                 pictureDownloader.saveTemporaryPicture(item.title, item.pictureUrl)
-                    .onError { error -> Log.d("SPAMEGGS", "ERROR: $error") }
+                    .onError { error ->
+                        when (error) {
+                            ErrorEntity.NoConnection -> viewModelScope.launch { showNoConnectionAlert() }
+                            ErrorEntity.Unknown -> viewModelScope.launch { showUnknownErrorAlert() }
+                            else -> {}
+                        }
+                    }
                     .map { uri -> buildEmailIntent(uri, item.title, item.description) }
                     .also { result -> result.get()?.let { intent -> navigate(intent) } }
             }
