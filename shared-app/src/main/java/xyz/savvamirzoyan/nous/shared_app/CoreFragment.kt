@@ -77,10 +77,18 @@ abstract class CoreFragment<VB : ViewBinding> : Fragment() {
 
         collect(viewModel.alertDataFlow) {
             AlertDialog.Builder(context)
-                .setTitle(it.first.getString(requireContext()))
-                .setMessage(it.second.getString(requireContext()))
-                .setPositiveButton(android.R.string.ok) { p0, _ -> p0?.dismiss() }
+                .setTitle(it.title.getString(requireContext()))
+                .setMessage(it.message.getString(requireContext()))
+                .setPositiveButton(android.R.string.ok) { p0, _ ->
+                    it.onPositiveClickCallback?.invoke()
+                    p0?.dismiss()
+                }
+                .setCancelable(false)
                 .show()
+        }
+
+        collect(viewModel.closeFragmentFlow) {
+            findNavController().navigateUp()
         }
     }
 

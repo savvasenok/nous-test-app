@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import xyz.savvamirzoyan.nous.core.ErrorEntity
-import xyz.savvamirzoyan.nous.core.ResultWrap
 import xyz.savvamirzoyan.nous.domain_news_details.NewsDetailsInteractor
 import xyz.savvamirzoyan.nous.shared_app.CoreViewModel
 import xyz.savvamirzoyan.nous.shared_data.PictureDownloader
@@ -32,34 +31,34 @@ class NewsItemDetailsViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            interactor.getNewsItem(newsItemId)
-                .also {
-                    if (it is ResultWrap.Failure) {
-                        // TODO: handle errors. maybe show toast or smth
+            whileLoading {
+                interactor.getNewsItem(newsItemId)
+                    .handleError { viewModelScope.launch { closeFragment() } }
+                    .get()
+                    ?.let {
+                        newsItem = it
+                        newsItemDomainToDetailsUiMapper.map(it)
                     }
-                }
-                .get()
-                ?.let {
-                    newsItem = it
-                    newsItemDomainToDetailsUiMapper.map(it)
-                }
-                ?.let { _detailsFlow.emit(it) }
+                    ?.let { _detailsFlow.emit(it) }
+            }
         }
     }
 
     fun onShareViaEmailButtonClick() {
         viewModelScope.launch {
-            newsItem?.also { item ->
-                pictureDownloader.saveTemporaryPicture(item.title, item.pictureUrl)
-                    .onError { error ->
-                        when (error) {
-                            ErrorEntity.NoConnection -> viewModelScope.launch { showNoConnectionAlert() }
-                            ErrorEntity.Unknown -> viewModelScope.launch { showUnknownErrorAlert() }
-                            else -> {}
+            whileLoading {
+                newsItem?.also { item ->
+                    pictureDownloader.saveTemporaryPicture(item.title, item.pictureUrl)
+                        .onError { error ->
+                            when (error) {
+                                ErrorEntity.NoConnection -> viewModelScope.launch { showNoConnectionAlert() }
+                                ErrorEntity.Unknown -> viewModelScope.launch { showUnknownErrorAlert() }
+                                else -> {}
+                            }
                         }
-                    }
-                    .map { uri -> buildEmailIntent(uri, item.title, item.description) }
-                    .also { result -> result.get()?.let { intent -> navigate(intent) } }
+                        .map { uri -> buildEmailIntent(uri, item.title, item.description) }
+                        .also { result -> result.get()?.let { intent -> navigate(intent) } }
+                }
             }
         }
     }

@@ -39,9 +39,7 @@ class DetailsFragment : CoreFragment<FragmentDetailsBinding>() {
     private fun setupViews() {
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
-        binding.fabSendEmail.setOnClickListener {
-            viewModel.onShareViaEmailButtonClick()
-        }
+        binding.fabSendEmail.setOnClickListener { viewModel.onShareViaEmailButtonClick() }
     }
 
     private fun setupFlowListeners() {

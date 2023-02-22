@@ -41,13 +41,13 @@ interface NousNewsManagerInteractor {
                     }
                     .map { image ->
                         val titleSearchResultStartIndex =
-                            image.title?.indexOf(searchRequest, ignoreCase = true) ?: -1
+                            image.title.indexOf(searchRequest, ignoreCase = true)
                         val titleSearchResultRange: IntRange? =
                             if (titleSearchResultStartIndex == -1) null
                             else titleSearchResultStartIndex..titleSearchResultStartIndex + searchRequest.length
 
                         val descriptionSearchResultStartIndex =
-                            image.description?.indexOf(searchRequest, ignoreCase = true) ?: -1
+                            image.description.indexOf(searchRequest, ignoreCase = true)
                         val descriptionSearchResultRange: IntRange? =
                             if (descriptionSearchResultStartIndex == -1) null
                             else descriptionSearchResultStartIndex..descriptionSearchResultStartIndex + searchRequest.length

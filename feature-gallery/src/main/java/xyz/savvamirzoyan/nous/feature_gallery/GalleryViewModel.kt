@@ -28,7 +28,11 @@ class GalleryViewModel @Inject constructor(
 ) : CoreViewModel() {
 
     init {
-        viewModelScope.launch { requestImages() }
+        viewModelScope.launch {
+            whileLoading {
+                requestImages()
+            }
+        }
     }
 
     private val _galleryNoDataFlow = MutableSharedFlow<Unit>(replay = 1)

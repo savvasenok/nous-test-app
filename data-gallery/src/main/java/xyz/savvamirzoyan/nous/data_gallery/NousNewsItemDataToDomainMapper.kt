@@ -11,13 +11,12 @@ interface NousNewsItemDataToDomainMapper {
 
     class Base @Inject constructor() : NousNewsItemDataToDomainMapper {
 
-        override fun map(model: NousNewsItemLocal) =
-            NousNewsItemDomain(
-                id = model.factId,
-                pictureUrl = model.pictureUrl,
-                title = model.title,
-                description = model.description
-            )
+        override fun map(model: NousNewsItemLocal) = NousNewsItemDomain(
+            id = model.factId,
+            pictureUrl = model.pictureUrl,
+            title = model.title,
+            description = model.description
+        )
 
         override fun map(model: NousNewsItemCloud) = NousNewsItemDomain(
             id = model.id,

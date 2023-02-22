@@ -2,9 +2,15 @@
 <resources>
 
     <style name="Theme.Nous" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:windowTranslucentNavigation">false</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <!--        <item name="android:windowTranslucentNavigation">true</item>-->
+        <!--        <item name="android:navigationBarColor">?colorSurfaceInverse</item>-->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">?isLightTheme</item>
+
+        <item name="android:popupMenuStyle">@style/NousPopupMenu</item>
+    </style>
+
+    <style name="NousPopupMenu" parent="Widget.Material3.PopupMenu.ContextMenu">
+        <item name="android:popupElevation">0dp</item>
     </style>
 </resources>

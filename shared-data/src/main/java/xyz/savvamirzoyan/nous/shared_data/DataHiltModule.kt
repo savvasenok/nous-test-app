@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalSerializationApi::class)
-
 package xyz.savvamirzoyan.nous.shared_data
 
 import android.content.Context
@@ -11,7 +9,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -23,6 +20,7 @@ import javax.inject.Singleton
 @Module
 abstract class DataModuleProvider {
 
+    @Singleton
     @Binds
     abstract fun bindPictureDownloader(base: PictureDownloader.Base): PictureDownloader
 
@@ -45,12 +43,15 @@ abstract class DataModuleProvider {
         @Provides
         fun provideNousFactsDAO(db: NousDataBase): NousFactsDAO = db.nousFactsDao
 
+        @Singleton
         @Provides
         fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
             .build()
 
+        @Singleton
         @Provides
+        @Suppress("OPT_IN_USAGE")
         fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(BuildConfig.NOUS_API_URL)

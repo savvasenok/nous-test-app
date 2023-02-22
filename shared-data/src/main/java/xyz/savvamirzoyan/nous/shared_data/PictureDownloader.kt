@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.core.content.FileProvider
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import xyz.savvamirzoyan.nous.core.ErrorEntity
 import xyz.savvamirzoyan.nous.core.PictureUrl
@@ -24,6 +25,9 @@ interface PictureDownloader {
 
         override suspend fun saveTemporaryPicture(title: String, pictureUrl: PictureUrl): ResultWrap<Uri> =
             withContext(Dispatchers.IO) {
+
+                delay(3000)
+
                 val file = File.createTempFile(title, ".png", context.externalCacheDir).apply {
                     createNewFile()
                     deleteOnExit()

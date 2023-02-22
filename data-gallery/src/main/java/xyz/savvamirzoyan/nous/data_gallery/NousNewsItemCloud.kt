@@ -6,7 +6,6 @@ import xyz.savvamirzoyan.nous.core.ID
 import xyz.savvamirzoyan.nous.core.Model
 import xyz.savvamirzoyan.nous.core.PictureUrl
 
-// I suppose images with titles and descriptions are some facts about temples, paintings or ancient tools
 @Serializable
 data class NousNewsItemCloud(
     val id: ID,
